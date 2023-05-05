@@ -19,7 +19,7 @@ resource "aws_subnet" "public_dev_vpc_1a_sn" {
   availability_zone = var.az_a
 
   tags = {
-    Name = "terraform_public_dev_vpc_1a_sn"
+    Name = "terraform-public-dev-vpc-1a-sn"
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "public_dev_vpc_1a_sn" {
 resource "aws_internet_gateway" "dev_igw" {
   vpc_id = aws_vpc.dev_vpc.id
   tags = {
-    Name = "terraform_dev_igw"
+    Name = "terraform-dev-igw"
   }
 }
 
@@ -52,4 +52,37 @@ resource "aws_route_table" "dev_public_rt" {
 resource "aws_route_table_association" "dev_public_rt_associate" {
   subnet_id      = aws_subnet.public_dev_vpc_1a_sn.id
   route_table_id = aws_route_table.dev_public_rt.id
+}
+
+# ---------------------------
+# Security Group
+# ---------------------------
+resource "aws_security_group" "dev_public_sg" {
+  name        = "terraform-dev-public-sg"
+  description = "For ALB"
+  vpc_id      = aws_vpc.dev_vpc.id
+  tags = {
+    Name = "terraform-dev-public-sg"
+  }
+
+  # インバウンドルール
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "http"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress = {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "https"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  # アウトバウンドルール
+  egress = {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+  cidr_blocks = ["0.0.0.0/0"] }
 }
