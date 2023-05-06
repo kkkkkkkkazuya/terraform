@@ -13,14 +13,14 @@ data "aws_ssm_parameter" "amzn2_latest_ami" {
 
 #EC2作成
 resource "aws_instance" "dev_public_instance" {
-  ami = ""
-  instance_type = "${public_ec2_instance_t2_micro}"
-  availability_zone = "${az_a}"
-  vpc_security_group_ids = "${vpc_security_group_ids.id}"
-  subnet_id = "${public_dev_vpc_1a_sn}"
+  ami                         = ""
+  instance_type               = public_ec2_instance_t2_micro
+  availability_zone           = az_a
+  vpc_security_group_ids      = vpc_security_group_ids.id
+  subnet_id                   = public_dev_vpc_1a_sn
   associate_public_ip_address = "true"
-  key_name = ""
+  key_name                    = ""
   tags = {
-    
+
   }
 }

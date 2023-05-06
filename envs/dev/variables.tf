@@ -28,6 +28,10 @@ variable "dev_all_rt_cidr_block" {
   type = string
 }
 
+variable "public_ec2_instance_t2_micro" {
+  type = string
+}
+
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
