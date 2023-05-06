@@ -2,6 +2,24 @@
 # EC2 Key pair
 # ---------------------------
 
+# 秘密鍵のアルゴリズム設定
+resource "tls_private_key" "dev_private_key" {
+    algorithm = "RSA"
+    rsa_bits  = 2048
+}
+
+# クライアントPCにKey pair（秘密鍵と公開鍵）を作成
+# - [terraform apply] 実行後はクライアントPCの公開鍵は自動削除される
+locals {
+  public_key_file  = "C:\\terraform_handson\\${var.key_name}.id_rsa.pub"
+  private_key_file = "C:\\terraform_handson\\${var.key_name}.id_rsa"
+}
+
+resource "local_file" "dev_private_key_pem" {
+  filename = "${local.private_key_file}"
+  content  = "${tls_private_key.handson_private_key.private_key_pem}"
+}
+
 # ---------------------------
 # EC2
 # ---------------------------
@@ -21,6 +39,6 @@ resource "aws_instance" "dev_public_instance" {
   associate_public_ip_address = "true"
   key_name                    = ""
   tags = {
-
+    Name = "dev_public_instance"
   }
 }
